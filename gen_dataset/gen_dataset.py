@@ -1,17 +1,6 @@
-import PIL
-from PIL import ImageFont
-from PIL import Image
-from PIL import ImageDraw
 import random
-import codecs
-import collections
 import tensorflow as tf
-import StringIO
-import sys
 import argparse
-from concurrent.futures import ProcessPoolExecutor
-import functools
-import multiprocessing
 import os
 import io
 
