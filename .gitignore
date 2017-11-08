@@ -99,3 +99,12 @@ ENV/
 
 # mypy
 .mypy_cache/
+/gen_dataset/emoji
+/gen_dataset/grinning_face_test
+/gen_dataset/grinning_face_train
+/gen_dataset/neutral_face_test
+/gen_dataset/neutral_face_train
+/gen_dataset/test.cfg
+/gen_dataset/test.cfg.tfrecord
+/gen_dataset/train.cfg
+/gen_dataset/train.cfg.tfrecord
