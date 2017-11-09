@@ -108,3 +108,7 @@ ENV/
 /gen_dataset/test.cfg.tfrecord
 /gen_dataset/train.cfg
 /gen_dataset/train.cfg.tfrecord
+/celeba_preprocess/img_align_celeba
+/celeba_preprocess/list_attr_celeba.txt
+/celeba_preprocess/output
+/celeba_preprocess/neutral_face
