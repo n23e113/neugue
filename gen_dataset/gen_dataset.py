@@ -7,7 +7,7 @@ import io
 random.seed(1)
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--input_config", help="specify input config file", default="train.cfg")
+parser.add_argument("--input_config", help="specify input config file", required=True)
 """
     input config file format
     unicode_point image_dir
