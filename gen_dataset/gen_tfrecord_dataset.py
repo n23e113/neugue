@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import random
 import tensorflow as tf
 import argparse
@@ -29,7 +30,7 @@ def bytes_feature(value):
 
 def int64_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
-    
+
 def int64list_feature(value):
     return tf.train.Feature(int64_list=tf.train.Int64List(value=value))
 
@@ -39,14 +40,14 @@ def chunks(l, n):
 
 def gen_sample(emoji_file_content, image_path):
     face_file_content = open(image_path, 'r').read()
-    
+
     sample = tf.train.Example(features=tf.train.Features(
     feature={
-      'image_face/format': bytes_feature("JPG"),
+      'image_face/format': bytes_feature("jpg"),
       'image_face/encoded': bytes_feature(face_file_content),
       'image_face/height': int64_feature(g_face_image_height),
       'image_face/width': int64_feature(g_face_image_width),
-      'image_emoji/format': bytes_feature("JPG"),
+      'image_emoji/format': bytes_feature("jpg"),
       'image_emoji/encoded': bytes_feature(emoji_file_content),
       'image_emoji/height': int64_feature(g_emoji_image_height),
       'image_emoji/width': int64_feature(g_emoji_image_width),
@@ -76,7 +77,7 @@ def gen_dataset(emoji_path, input_config_filename):
             if os.path.isfile(s):
                 sample_source.append((emoji_files_content[data[0]], s))
     random.shuffle(sample_source)
-    
+
     writer = tf.python_io.TFRecordWriter(os.path.basename(input_config_filename) + ".tfrecord")
     for s in sample_source:
         sample = gen_sample(s[0], s[1])

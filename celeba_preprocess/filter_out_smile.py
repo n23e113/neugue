@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import random
 import argparse
 import os
@@ -7,6 +8,7 @@ import codecs
 import sys
 
 # zero based
+# smile flag at 31th position
 g_smile_index = 31
 g_neutral_face_path = "neutral_face"
 

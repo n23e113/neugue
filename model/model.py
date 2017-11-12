@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import tensorflow as tf
 slim = tf.contrib.slim
@@ -24,23 +25,26 @@ def int_shape(tensor):
     return [num if num is not None else -1 for num in shape]
 
 def auto_encoder(scope_name, reuse, image, image_channel, coding_len, convolution_repeat_times, filter_count):
-"""
-    face image -> face image auto encoder
-    scope_name: variable scope name
-    reuse: 
-    image: batch image
-    image_channel: image channel count, default is 3
-    coding_len: auto encoder hidden coding length
-    convolution_repeat_times: conv(rev conv) layer count
-    filter_count: number of conv filter
-    
-    return
-    out: image
-    coding: auto encoder hidden coding
-    variables: trainable variable
-"""
+    """
+    Args:
+        face image -> face image auto encoder
+        scope_name: variable scope name
+        reuse:
+        image: batch image
+        image_channel: image channel count, default is 3
+        coding_len: auto encoder hidden coding length
+        convolution_repeat_times: conv(rev conv) layer count
+        filter_count: number of conv filter
+
+    Returns:
+        out: image
+        coding: auto encoder hidden coding
+        variables: trainable variable
+    """
+
     # todo ricker, add batch norm
     # todo ricker, add sigmoid after coding
+
     with tf.variable_scope(scope_name, reuse=reuse) as vs:
         # encoder
         to_next_layer = slim.conv2d(image, filter_count, 3, 1, activation_fn=tf.nn.elu)
@@ -73,16 +77,28 @@ def auto_encoder(scope_name, reuse, image, image_channel, coding_len, convolutio
     return out, coding, variables
 
 def build_model(face_batch, emoji_batch):
+    """
+        face_batch: face image batch
+        emoji_batch: emoji image batch
+
+        return
+        face_out
+        emoji_out
+        trainable variables
+    """
     face_out, face_coding, face_variables = auto_encoder("face_auto_encoder",
         False, face_batch, 3, 256, 3, 16)
 
     emoji_out, emoji_coding, emoji_variables = auto_encoder("emoji_auto_encoder",
         False, emoji_batch, 3, 64, 2, 8)
 
-    coding_loss = tf.nn.l2_loss(emoji_coding[:, 0:48] - face_coding[:, 0:48])
+    return face_out, emoji_out, face_coding, emoji_coding, (face_variables, emoji_variables)
 
-    face_recover_loss = tf.norm(face_batch - face_out, 1)
+def build_loss(face_batch, face_out, face_coding, emoji_batch, emoji_out, emoji_coding):
+    coding_loss = tf.losses.mean_squared_error(emoji_coding[:, 0:48], face_coding[:, 0:48])
 
-    emoji_recover_loss = tf.norm(emoji_batch - emoji_out, 1)
+    face_recover_loss = tf.losses.absolute_difference(face_batch, face_out)
+
+    emoji_recover_loss = tf.losses.absolute_difference(emoji_batch, emoji_out)
 
     return coding_loss + face_recover_loss + emoji_recover_loss

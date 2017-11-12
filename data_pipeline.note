@@ -1,0 +1,20 @@
+dataset = common_flat.create_dataset -> get_split -> slim.dataset.Dataset(tfrecord_file_pattern, ...)
+that is, a named tuple with
+  a file name pattern
+  a file reader (like tf.TFRecordReader if file is tfrecord format)
+  a example decoder (like slim.tfexample_decoder.TFExampleDecoder)
+  num_samples
+
+provider = slim.dataset_data_provider.DatasetDataProvider(dataset)
+image, label = provider.get(['image', 'label'])
+# note 1, keys are from example decoder in dataset
+# note 2, the provider.get() only return single data point, so with stochastic gradient decent(or its variations), you need the following two options
+
+# one option, shuffle batch to create batch data
+images, labels = tf.train.shuffle_batch([image, label], batch_size=batch_size)
+
+# another option, prefetch queue, support data parallel training
+batch_queue = slim.prefetch_queue.prefetch_queue([images, labels])
+for clone in clones:
+  imgs, y = batch_queue.dequeue()
+  clone.build_model(batch, label)
