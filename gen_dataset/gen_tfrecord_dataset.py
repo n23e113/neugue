@@ -4,6 +4,7 @@ import tensorflow as tf
 import argparse
 import os
 import io
+import sys
 
 random.seed(1)
 
@@ -45,12 +46,8 @@ def gen_sample(emoji_file_content, image_path):
     feature={
       'image_face/format': bytes_feature("jpg"),
       'image_face/encoded': bytes_feature(face_file_content),
-      'image_face/height': int64_feature(g_face_image_height),
-      'image_face/width': int64_feature(g_face_image_width),
       'image_emoji/format': bytes_feature("jpg"),
       'image_emoji/encoded': bytes_feature(emoji_file_content),
-      'image_emoji/height': int64_feature(g_emoji_image_height),
-      'image_emoji/width': int64_feature(g_emoji_image_width),
     }))
     return sample
 
@@ -65,6 +62,7 @@ def gen_dataset(emoji_path, input_config_filename):
     print(emoji_files_content.keys())
 
     sample_source = []
+    file_count = 0
     for filelineno, line in enumerate(io.open(input_config_filename, encoding="utf-8")):
         line = line.strip()
         if not line:
@@ -76,6 +74,11 @@ def gen_dataset(emoji_path, input_config_filename):
             s = os.path.join(data[1], f)
             if os.path.isfile(s):
                 sample_source.append((emoji_files_content[data[0]], s))
+                file_count += 1
+                if file_count % 1000 == 0:
+                    sys.stdout.write("*")
+                    sys.stdout.flush()
+    print("")
     random.shuffle(sample_source)
 
     writer = tf.python_io.TFRecordWriter(os.path.basename(input_config_filename) + ".tfrecord")

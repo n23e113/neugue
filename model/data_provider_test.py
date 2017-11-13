@@ -2,10 +2,9 @@ import tensorflow as tf
 from tensorflow.python.training import queue_runner_impl
 from PIL import Image
 import numpy as np
+import argparse
 
 import data_provider
-
-tf.logging.set_verbosity(tf.logging.DEBUG)
 
 def test():
     dataset = data_provider.config_to_slim_dataset()

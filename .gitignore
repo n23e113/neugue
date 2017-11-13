@@ -112,3 +112,7 @@ ENV/
 /celeba_preprocess/output
 /celeba_preprocess/neutral_face
 /celeba
+/CelebA
+/celeba_preprocess/smile_face
+/dataset
+/gen_dataset/celeba.cfg

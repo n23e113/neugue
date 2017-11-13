@@ -9,11 +9,11 @@ import os
 import tensorflow as tf
 from tensorflow.contrib import slim
 
-DEFAULT_DATASET_DIR = os.path.join(os.path.dirname(__file__), '../celeba')
+DEFAULT_DATASET_DIR = os.path.join(os.path.dirname(__file__), '../dataset')
 DEFAULT_CONFIG = {
     'name': 'celeba',
     'size': 90000,
-    'pattern': 'celeba*',
+    'pattern': 'celeba*.tfrecord',
     'face_image_shape': (218, 178, 3),
     'emoji_image_shape': (144, 144, 3),
     'items_to_descriptions': {
