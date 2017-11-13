@@ -3,6 +3,12 @@
 decode batch example from tfrecord
 
 """
+
+import collections
+import os
+import tensorflow as tf
+from tensorflow.contrib import slim
+
 DEFAULT_DATASET_DIR = os.path.join(os.path.dirname(__file__), '../celeba')
 DEFAULT_CONFIG = {
     'name': 'celeba',
@@ -14,17 +20,20 @@ DEFAULT_CONFIG = {
         ''
     }
 }
+ShuffleBatchConfig = collections.namedtuple('ShuffleBatchConfig', [
+    'num_batching_threads', 'queue_capacity', 'min_after_dequeue'
+])
 DEFAULT_SHUFFLE_CONFIG = ShuffleBatchConfig(
     num_batching_threads=8, queue_capacity=3000, min_after_dequeue=1000)
 
-def config_to_slim_dataset(config=None):
-"""
-Args:
-    config: dataset config
-
-Returns:
-    slim.dataset.Dataset
-"""
+def config_to_slim_dataset(config=None, dataset_dir=None):
+#
+#Args:
+#    config: dataset config
+#
+#Returns:
+#    slim.dataset.Dataset
+#
     if not dataset_dir:
         dataset_dir = DEFAULT_DATASET_DIR
 
@@ -69,13 +78,12 @@ Returns:
       items_to_descriptions=config['items_to_descriptions'])
 
 def slim_dataset_to_prefetch_queue(dataset, batch_size):
-"""
-Args:
-    dataset: slim.dataset.Dataset
-    batch_size: batch size
-Returns:
-    slim.prefetch_queue.prefetch_queue contain face image batch tensor and emoji image batch tensor
-"""
+#Args:
+#    dataset: slim.dataset.Dataset
+#    batch_size: batch size
+#Returns:
+#    slim.prefetch_queue.prefetch_queue contain face image batch tensor and emoji image batch tensor
+
     shuffle_config = DEFAULT_SHUFFLE_CONFIG
 
     provider = slim.dataset_data_provider.DatasetDataProvider(

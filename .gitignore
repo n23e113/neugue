@@ -111,3 +111,4 @@ ENV/
 /celeba_preprocess/list_attr_celeba.txt
 /celeba_preprocess/output
 /celeba_preprocess/neutral_face
+/celeba
