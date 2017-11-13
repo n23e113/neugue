@@ -17,4 +17,4 @@ images, labels = tf.train.shuffle_batch([image, label], batch_size=batch_size)
 batch_queue = slim.prefetch_queue.prefetch_queue([images, labels])
 for clone in clones:
   imgs, y = batch_queue.dequeue()
-  clone.build_model(batch, label)
+  clone.build_model(imgs, y)
