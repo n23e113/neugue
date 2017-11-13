@@ -1,4 +1,4 @@
-dataset = common_flat.create_dataset -> get_split -> slim.dataset.Dataset(tfrecord_file_pattern, ...)
+dataset = slim.dataset.Dataset(tfrecord_file_pattern, ...)
 that is, a named tuple with
   a file name pattern
   a file reader (like tf.TFRecordReader if file is tfrecord format)
