@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import numpy as np
 import tensorflow as tf
 slim = tf.contrib.slim
@@ -15,6 +16,8 @@ def train():
     prefetch_queue = data_provider.slim_dataset_to_prefetch_queue(dataset, 64)
 
     face_batch, emoji_batch = prefetch_queue.dequeue()
+    face_batch = tf.image.convert_image_dtype(face_batch, dtype=tf.float32)
+    emoji_batch = tf.image.convert_image_dtype(emoji_batch, dtype=tf.float32)
 
     face_out, emoji_out, face_coding, emoji_coding, _ = model.build_model(face_batch, emoji_batch)
     loss = model.build_loss(face_batch, face_out, face_coding, emoji_batch, emoji_out, emoji_coding)
@@ -34,7 +37,7 @@ def train():
       save_summaries_secs=60,
       trace_every_n_steps=1000,
       save_interval_secs=600,
-      startup_delay_steps=startup_delay_steps,
-      sync_optimizer=sync_optimizer,
       init_fn=init_assign_fn,
       session_config=session_config)
+
+train()

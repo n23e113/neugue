@@ -116,3 +116,4 @@ ENV/
 /celeba_preprocess/smile_face
 /dataset
 /gen_dataset/celeba.cfg
+/model/train_dir

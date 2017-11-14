@@ -87,18 +87,23 @@ def slim_dataset_to_prefetch_queue(dataset, batch_size):
     shuffle_config = DEFAULT_SHUFFLE_CONFIG
 
     provider = slim.dataset_data_provider.DatasetDataProvider(
-      dataset,
-      shuffle=True,
-      common_queue_capacity=16 * batch_size,
-      common_queue_min=2 * batch_size)
+        dataset,
+        shuffle=True,
+        common_queue_capacity=16 * batch_size,
+        common_queue_min=2 * batch_size)
 
     face_image, emoji_image = provider.get(['image_face', 'image_emoji'])
 
     face_image_batch, emoji_image_batch = tf.train.shuffle_batch(
-      [face_image, emoji_image],
-      batch_size=batch_size,
-      num_threads=shuffle_config.num_batching_threads,
-      capacity=shuffle_config.queue_capacity,
-      min_after_dequeue=shuffle_config.min_after_dequeue)
+        [face_image, emoji_image],
+        batch_size=batch_size,
+        num_threads=shuffle_config.num_batching_threads,
+        capacity=shuffle_config.queue_capacity,
+        min_after_dequeue=shuffle_config.min_after_dequeue)
+
+    # resize to 224 x 192 (h x w)
+    face_image_batch = tf.image.resize_bicubic(face_image_batch, [224, 192])
+    # resize to 128 x 128 (h x w)
+    emoji_image_batch = tf.image.resize_bicubic(emoji_image_batch, [128, 128])
 
     return slim.prefetch_queue.prefetch_queue([face_image_batch, emoji_image_batch])
