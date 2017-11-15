@@ -23,7 +23,7 @@ def get_conv_shape(tensor):
 def int_shape(tensor):
     shape = tensor.get_shape().as_list()
     return [num if num is not None else -1 for num in shape]
-    
+
 def face_auto_encoder(scope_name, reuse, image, image_channel, coding_len, convolution_repeat_times, filter_count):
     """
     Args:
@@ -175,10 +175,7 @@ def build_model(face_batch, emoji_batch):
     return face_out, emoji_out, face_coding, emoji_coding, (face_variables, emoji_variables)
 
 def build_loss(face_batch, face_out, face_coding, emoji_batch, emoji_out, emoji_coding):
-    coding_loss = tf.losses.mean_squared_error(emoji_coding[:, 0:48], face_coding[:, 0:48])
-
+    coding_loss = tf.losses.absolute_difference(emoji_coding[:, 0:48], face_coding[:, 0:48])
     face_recover_loss = tf.losses.absolute_difference(face_batch, face_out)
-
     emoji_recover_loss = tf.losses.absolute_difference(emoji_batch, emoji_out)
-
-    return coding_loss + face_recover_loss + emoji_recover_loss
+    return coding_loss + face_recover_loss + emoji_recover_loss, coding_loss, face_recover_loss, emoji_recover_loss
